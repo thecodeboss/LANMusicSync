@@ -4,6 +4,7 @@
 #include "AudioSource.h"
 
 class StreamingSource : public AudioSource {
+	bool m_isServer;
 public:
 	virtual Buffer getBuffer();
 	virtual Buffer peekBuffer();
