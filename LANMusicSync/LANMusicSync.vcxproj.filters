@@ -2,18 +2,49 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="AudioDevice.cpp" />
-    <ClCompile Include="AudioSource.cpp" />
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="Server.cpp" />
-    <ClCompile Include="StreamingSource.cpp" />
+    <ClCompile Include="AudioDevice.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSource.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamingSource.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioDevice.h" />
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="AudioSource.h" />
-    <ClInclude Include="Server.h" />
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="StreamingSource.h" />
+    <ClInclude Include="AudioDevice.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamingSource.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{c1590e23-40ff-4fb2-9feb-76aba5d3922e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{a218f9f9-5642-48c7-8d2a-c8deb875656f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

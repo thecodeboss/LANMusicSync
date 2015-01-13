@@ -1,5 +1,6 @@
 #include "Client.h"
-#define DEFAULT_BUFLEN 512
+#include "Debug.h"
+#include "Buffer.h"
 
 int Client::Connect( char* server, char* port )
 {
@@ -15,7 +16,7 @@ int Client::Connect( char* server, char* port )
 	// Resolve the server address and port
 	int iResult = getaddrinfo(server, port, &hints, &result);
 	if (getaddrinfo(server, port, &hints, &result) != 0) {
-		printf("getaddrinfo failed: %d\n", iResult);
+		ConsolePrintf("getaddrinfo failed: %d\n", iResult);
 		WSACleanup();
 		return 1;
 	}
@@ -31,7 +32,7 @@ int Client::Connect( char* server, char* port )
 		ptr->ai_protocol);
 
 	if (m_ConnectSocket == INVALID_SOCKET) {
-		printf("Error at socket(): %ld\n", WSAGetLastError());
+		ConsolePrintf("Error at socket(): %ld\n", WSAGetLastError());
 		freeaddrinfo(result);
 		WSACleanup();
 		return 1;
@@ -40,7 +41,7 @@ int Client::Connect( char* server, char* port )
 	// Connect to server.
 	iResult = connect( m_ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 	if (iResult == SOCKET_ERROR) {
-		printf("connect failed: %d\n", WSAGetLastError());
+		ConsolePrintf("connect failed: %d\n", WSAGetLastError());
 		closesocket(m_ConnectSocket);
 		m_ConnectSocket = INVALID_SOCKET;
 	}
@@ -53,7 +54,7 @@ int Client::Connect( char* server, char* port )
 	freeaddrinfo(result);
 
 	if (m_ConnectSocket == INVALID_SOCKET) {
-		printf("Unable to connect to server!\n");
+		ConsolePrintf("Unable to connect to server!\n");
 		WSACleanup();
 		return 1;
 	}
@@ -62,7 +63,7 @@ int Client::Connect( char* server, char* port )
 	int ConnectID = 13;
 	iResult = send(m_ConnectSocket, (char*)&ConnectID, (int) sizeof(int), 0);
 	if (iResult == SOCKET_ERROR) {
-		printf("send failed: %d\n", WSAGetLastError());
+		ConsolePrintf("send failed: %d\n", WSAGetLastError());
 		closesocket(m_ConnectSocket);
 		WSACleanup();
 		return 1;
@@ -74,17 +75,18 @@ int Client::Connect( char* server, char* port )
 	// the client can still use the ConnectSocket for receiving data
 	iResult = shutdown(m_ConnectSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed: %d\n", WSAGetLastError());
+		ConsolePrintf("shutdown failed: %d\n", WSAGetLastError());
 		closesocket(m_ConnectSocket);
 		WSACleanup();
 		return 1;
 	}
 
 	// Receive data until the server closes the connection
-	int recvbuflen = DEFAULT_BUFLEN;
-	char recvbuf[DEFAULT_BUFLEN];
+	int recvbuflen = BUFFER_SIZE;
+	Buffer recvbuf;
+	recvbuf.reserve(recvbuflen);
 	do {
-		iResult = recv(m_ConnectSocket, recvbuf, recvbuflen, 0);
+		iResult = recv(m_ConnectSocket, (char*)recvbuf.data(), recvbuflen, 0);
 		if (iResult > 0)
 			printf("Bytes received: %d\n", iResult);
 		else if (iResult == 0)
@@ -96,7 +98,7 @@ int Client::Connect( char* server, char* port )
 	// shutdown the send half of the connection since no more data will be sent
 	iResult = shutdown(m_ConnectSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed: %d\n", WSAGetLastError());
+		ConsolePrintf("shutdown failed: %d\n", WSAGetLastError());
 		closesocket(m_ConnectSocket);
 		WSACleanup();
 		return 1;

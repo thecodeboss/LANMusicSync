@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClInclude Include="AudioDevice.h" />
     <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Server.h" />
