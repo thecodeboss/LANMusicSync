@@ -6,6 +6,7 @@
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="StreamingSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioDevice.h" />
@@ -13,5 +14,6 @@
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="StreamingSource.h" />
   </ItemGroup>
 </Project>
