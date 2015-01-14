@@ -10,11 +10,11 @@ class StreamingSource : public AudioSource {
 	 * Used by the server to synchronize data with the clients.
 	 * @param  numBuffers
 	 */
-	void synchronize(size_t numBuffers);
+	void Synchronize(size_t numBuffers);
 
 public:
-	virtual Buffer getBuffer();
-	virtual Buffer peekBuffer();
+	virtual Buffer GetBuffer();
+	virtual Buffer PeekBuffer();
 };
 
 #endif // StreamingSource_h__

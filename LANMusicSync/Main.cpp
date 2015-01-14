@@ -8,6 +8,7 @@
 #include "Client.h"
 #include "Server.h"
 #include "AudioDevice.h"
+#include "StreamingSource.h"
 
 // Format:
 // ./LANMusicSync client 192.168.0.100 1234
@@ -34,7 +35,13 @@ int main(int argc, char** argv) {
 			c.Connect(argv[2], argv[3]);
 		}
 		else if (!strcmp("server", argv[1])) {
-			// Start a client
+			// Load an example wave file
+			WavFile * wavFile = new WavFile("Wav_Ex1.wav");
+			StreamingSource * audioSource = new StreamingSource();
+			audioSource->LoadWavFile(wavFile);
+			audioDevice->SetAudioSource(audioSource);
+
+			// Start a server
 			Server s;
 			s.Start(argv[2]);
 		}

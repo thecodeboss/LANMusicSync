@@ -2,8 +2,9 @@
 #define Buffer_h__
 
 #include <queue>
+#include <vector>
 #define BUFFER_SIZE 512
-typedef unsigned long Sample;
-typedef std::vector<Sample> Buffer;
+typedef char Sample_t;
+typedef std::vector<Sample_t> Buffer;
 
 #endif // Buffer_h__

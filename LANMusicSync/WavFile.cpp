@@ -4,6 +4,13 @@
 // Prototypes
 char * LoadEntireFile(std::string fileName, size_t& fileSize);
 
+WavFile::WavFile() : m_DataSize(0), m_FileSize(0) {}
+
+WavFile::WavFile(std::string fileName)
+{
+	LoadFile(fileName);
+}
+
 WavFile::~WavFile()
 {
 	delete[] m_RawData;
@@ -13,8 +20,8 @@ bool WavFile::LoadFile(std::string fileName)
 {
 	// @TODO:
 	// Probably shouldn't load the entire file at once - this could be wasteful.
-	m_RawFile = LoadEntireFile(fileName, m_FileSize);
-	if (m_RawFile == nullptr) {
+	char * RawFile = LoadEntireFile(fileName, m_FileSize);
+	if (RawFile == nullptr) {
 		ConsolePrintf("Failed to load wave file.");
 		return false;
 	}
@@ -22,21 +29,31 @@ bool WavFile::LoadFile(std::string fileName)
 	size_t bytesRead = 0;
 	while (bytesRead + sizeof(WavChunk) <= m_FileSize) {
 		WavChunk chunk;
-		memcpy(&chunk, m_RawFile + bytesRead, sizeof(WavChunk));
+		memcpy(&chunk, RawFile + bytesRead, sizeof(WavChunk));
 		bytesRead += sizeof(WavChunk);
 		switch (chunk.Type)
 		{
 		case WavChunk_t::RiffHeader:
+			WavChunk_t RiffType;
+			memcpy(&RiffType, RawFile + bytesRead, sizeof(WavChunk_t));
+			bytesRead += sizeof(WavChunk_t);
+			if (RiffType != WavChunk_t::WavRiff) {
+				ConsolePrintf("Not a wave file.");
+				return false;
+			}
+			break;
+		case WavChunk_t::Format:
 			if (chunk.DataSize >= sizeof(WavHeader))
 			{
-				memcpy(&m_Format, m_RawFile + bytesRead, sizeof(WavHeader));
-				// Ignore extra bytes in the header
-				bytesRead += sizeof(WavHeader) + m_Format.NumExtraBytes;
+				memcpy(&m_Format, RawFile + bytesRead, sizeof(WavHeader));
+				// There could be extra bits, but we skip them.
+				bytesRead += chunk.DataSize;
 			}
 			break;
 		case WavChunk_t::Data:
 			m_RawData = new char[chunk.DataSize];
-			memcpy(m_RawData, m_RawFile + bytesRead, chunk.DataSize);
+			m_DataSize = chunk.DataSize;
+			memcpy(m_RawData, RawFile + bytesRead, chunk.DataSize);
 			bytesRead += chunk.DataSize;
 			break;
 		default:
@@ -47,10 +64,20 @@ bool WavFile::LoadFile(std::string fileName)
 
 	// Done with the file, delete it since we've copied all the wav file
 	// data that we will need
-	delete[] m_RawFile;
-	m_RawFile = nullptr;
+	delete[] RawFile;
+	RawFile = nullptr;
 
 	return true;
+}
+
+size_t WavFile::GetDataSize()
+{
+	return m_DataSize;
+}
+
+char * WavFile::GetRawData()
+{
+	return m_RawData;
 }
 
 char * LoadEntireFile(std::string fileName, size_t& fileSize)

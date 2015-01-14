@@ -2,15 +2,16 @@
 #define AudioSource_h__
 
 #include "Buffer.h"
+#include "WavFile.h"
 
 class AudioSource {
 protected:
 	std::queue<Buffer> m_AudioData;
 public:
-	virtual Buffer getBuffer();
-	virtual Buffer peekBuffer();
-	virtual void putBuffer(Buffer b);
-	void loadWavFile(std::string fileName);
+	virtual Buffer GetBuffer();
+	virtual Buffer PeekBuffer();
+	virtual void PutBuffer(Buffer b);
+	void LoadWavFile(WavFile* wavFile);
 };
 
 #endif // AudioSource_h__

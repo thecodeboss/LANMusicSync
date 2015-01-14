@@ -25,3 +25,8 @@ bool AudioDevice::Init()
 
 	return true;
 }
+
+void AudioDevice::SetAudioSource(AudioSource* audioSource)
+{
+
+}

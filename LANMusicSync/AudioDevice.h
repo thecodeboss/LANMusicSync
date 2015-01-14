@@ -10,6 +10,7 @@ class AudioDevice {
 	static IXAudio2MasteringVoice* XAudio2MasteringVoice;
 public:
 	bool Init();
+	void SetAudioSource(AudioSource* audioSource);
 };
 
 #endif // AudioDevice_h__

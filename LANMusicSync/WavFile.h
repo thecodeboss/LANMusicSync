@@ -11,7 +11,7 @@
 
 enum WavChunk_t : unsigned {
 	RiffHeader = 0x46464952,
-	WavRiff = 0x54651475,
+	WavRiff = 0x45564157,
 	Format = 0x020746d66,
 	LabeledText = 0x478747C6,
 	Instrumentation = 0x478747C6,
@@ -47,20 +47,22 @@ struct WavHeader {
 	unsigned AvgBitsPerSecond;
 	unsigned short BlockAlign;
 	unsigned short BitsPerSample;
-	unsigned short NumExtraBytes;
 };
 #pragma pack(pop)
 
 class WavFile {
 	WavHeader m_Format;
 	size_t m_FileSize;
-	char * m_RawFile;
+	size_t m_DataSize;
 	char * m_RawData;
 
-	virtual ~WavFile();
-
 public:
+	virtual ~WavFile();
+	WavFile();
+	WavFile(std::string fileName);
 	bool LoadFile(std::string fileName);
+	size_t GetDataSize();
+	char * GetRawData();
 };
 
 #endif // WavFile_h__

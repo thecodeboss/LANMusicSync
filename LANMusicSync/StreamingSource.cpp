@@ -1,20 +1,20 @@
 #include "StreamingSource.h"
 
 
-Buffer StreamingSource::getBuffer()
+Buffer StreamingSource::GetBuffer()
 {
 	// Do network stuff to populate buffer
 
 	// Then parent handles getBuffer as usual for playback
-	return AudioSource::getBuffer();
+	return AudioSource::GetBuffer();
 }
 
-Buffer StreamingSource::peekBuffer()
+Buffer StreamingSource::PeekBuffer()
 {
 	return Buffer();
 }
 
-void StreamingSource::synchronize(size_t numBuffers)
+void StreamingSource::Synchronize(size_t numBuffers)
 {
 
 }
