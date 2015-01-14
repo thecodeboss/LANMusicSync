@@ -17,3 +17,8 @@ void AudioSource::putBuffer(Buffer b)
 {
 	m_AudioData.push(b);
 }
+
+void AudioSource::loadWavFile(std::string fileName)
+{
+
+}

@@ -13,3 +13,8 @@ Buffer StreamingSource::peekBuffer()
 {
 	return Buffer();
 }
+
+void StreamingSource::synchronize(size_t numBuffers)
+{
+
+}

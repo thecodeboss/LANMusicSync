@@ -28,7 +28,7 @@ int Client::Connect( char* server, char* port )
 	ptr=result;
 
 	// Create a SOCKET for connecting to server
-	m_ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, 
+	m_ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
 		ptr->ai_protocol);
 
 	if (m_ConnectSocket == INVALID_SOCKET) {
