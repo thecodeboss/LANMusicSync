@@ -27,6 +27,10 @@ int main(int argc, char** argv) {
 	AudioDevice* audioDevice = new AudioDevice();
 	audioDevice->Init();
 
+	// Set up the streaming audio source
+	StreamingSource * audioSource = new StreamingSource();
+	audioDevice->SetAudioSource(audioSource);
+
 	// Run application
 	if (argc >= 3) {
 		if (!strcmp("client", argv[1])) {
@@ -37,9 +41,7 @@ int main(int argc, char** argv) {
 		else if (!strcmp("server", argv[1])) {
 			// Load an example wave file
 			WavFile * wavFile = new WavFile("Wav_Ex1.wav");
-			StreamingSource * audioSource = new StreamingSource();
 			audioSource->LoadWavFile(wavFile);
-			audioDevice->SetAudioSource(audioSource);
 
 			// Start a server
 			Server s;
