@@ -72,9 +72,6 @@ bool AudioSource::Start()
 		return false;
 	}
 
-	unsigned CurrentDiskReadBuffer = 0;
-	unsigned CurrentPosition = 0;
-	unsigned BufferSize = BUFFER_SIZE;
 	while (m_bPlaying)
 	{
 		// Check with XAudio to see if there are any buffers available, and wait if needed
@@ -84,9 +81,11 @@ bool AudioSource::Start()
 			WaitForSingleObject(m_Callback.hBufferEndEvent, INFINITE);
 		}
 
+		if (!m_AudioData.size()) break;
+
 		// Pointer the XAudio buffer at our buffer array
 		XAUDIO2_BUFFER buf = { 0 };
-		buf.AudioBytes = BufferSize;
+		buf.AudioBytes = BUFFER_SIZE;
 		buf.pAudioData = &m_AudioData.front()->front();
 		m_AudioData.pop();
 
@@ -96,10 +95,6 @@ bool AudioSource::Start()
 			ConsolePrintf(TEXT("XAudio2: Failed to submit source buffers."));
 			break;
 		}
-
-		CurrentDiskReadBuffer++;
-		CurrentDiskReadBuffer %= MAX_BUFFER_COUNT;
-		CurrentPosition++;
 	}
 
 	// Wait for everything to finish
@@ -116,10 +111,12 @@ bool AudioSource::Start()
 
 bool AudioSource::Stop()
 {
-	throw std::exception("The method or operation is not implemented.");
+	 // @TODO
+	return true;
 }
 
 bool AudioSource::Cleanup()
 {
-	throw std::exception("The method or operation is not implemented.");
+	// @TODO
+	return true;
 }
