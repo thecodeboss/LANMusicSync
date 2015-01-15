@@ -13,8 +13,8 @@ class StreamingSource : public AudioSource {
 	void Synchronize(size_t numBuffers);
 
 public:
-	virtual Buffer GetBuffer();
-	virtual Buffer PeekBuffer();
+	virtual Buffer* GetBuffer();
+	virtual Buffer* PeekBuffer();
 };
 
 #endif // StreamingSource_h__

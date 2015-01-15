@@ -1,7 +1,7 @@
 #include "StreamingSource.h"
 
 
-Buffer StreamingSource::GetBuffer()
+Buffer* StreamingSource::GetBuffer()
 {
 	// Do network stuff to populate buffer
 
@@ -9,9 +9,9 @@ Buffer StreamingSource::GetBuffer()
 	return AudioSource::GetBuffer();
 }
 
-Buffer StreamingSource::PeekBuffer()
+Buffer* StreamingSource::PeekBuffer()
 {
-	return Buffer();
+	return new Buffer();
 }
 
 void StreamingSource::Synchronize(size_t numBuffers)

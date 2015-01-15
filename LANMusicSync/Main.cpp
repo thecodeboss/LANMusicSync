@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
 			// Load an example wave file
 			WavFile * wavFile = new WavFile("Wav_Ex1.wav");
 			audioSource->LoadWavFile(wavFile);
+			audioDevice->Play();
 
 			// Start a server
 			Server s;

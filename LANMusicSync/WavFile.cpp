@@ -80,6 +80,11 @@ char * WavFile::GetRawData()
 	return m_RawData;
 }
 
+WavHeader* WavFile::GetFormat()
+{
+	return &m_Format;
+}
+
 char * LoadEntireFile(std::string fileName, size_t& fileSize)
 {
 	std::streampos size = 0;

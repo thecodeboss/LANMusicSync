@@ -63,6 +63,7 @@ public:
 	bool LoadFile(std::string fileName);
 	size_t GetDataSize();
 	char * GetRawData();
+	WavHeader* GetFormat();
 };
 
 #endif // WavFile_h__

@@ -44,6 +44,9 @@
     <ClInclude Include="WavFile.h">
       <Filter>Audio</Filter>
     </ClInclude>
+    <ClInclude Include="XAudio2VoiceCallback.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Audio">
