@@ -81,18 +81,35 @@ int Client::Connect( char* server, char* port )
 		return 1;
 	}
 
+	bool bWavFormatReceived = false;
+	bool bPlaying = false;
+
 	// Receive data until the server closes the connection
 	int recvbuflen = BUFFER_SIZE;
-	Buffer recvbuf;
-	recvbuf.reserve(recvbuflen);
+	Buffer* recvbuf = new Buffer(recvbuflen, 0);
 	do {
-		iResult = recv(m_ConnectSocket, (char*)recvbuf.data(), recvbuflen, 0);
+		iResult = recv(m_ConnectSocket, (char*)recvbuf->data(), recvbuflen, 0);
 		if (iResult > 0)
 			printf("Bytes received: %d\n", iResult);
 		else if (iResult == 0)
 			printf("Connection closed\n");
 		else
 			printf("recv failed: %d\n", WSAGetLastError());
+
+		if (!bWavFormatReceived) {
+			// Then the first buffer is the wave format
+			WavHeader test = *(WavHeader *)recvbuf->data();
+			m_AudioDevice->GetAudioSource()->SetWavFormat(&test);
+			bWavFormatReceived = true;
+			continue;
+		}
+
+		m_AudioDevice->GetAudioSource()->PutBuffer(recvbuf);
+		if (!bPlaying) {
+			// Start audio playback
+			m_AudioDevice->Play();
+			bPlaying = true;
+		}
 	} while (iResult > 0);
 
 	// shutdown the send half of the connection since no more data will be sent

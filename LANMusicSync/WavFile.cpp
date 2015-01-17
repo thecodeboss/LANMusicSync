@@ -4,7 +4,7 @@
 // Prototypes
 char * LoadEntireFile(std::string fileName, size_t& fileSize);
 
-WavFile::WavFile() : m_DataSize(0), m_FileSize(0) {}
+WavFile::WavFile() : m_DataSize(0), m_FileSize(0), m_RawData(nullptr) {}
 
 WavFile::WavFile(std::string fileName)
 {
@@ -83,6 +83,11 @@ char * WavFile::GetRawData()
 WavHeader* WavFile::GetFormat()
 {
 	return &m_Format;
+}
+
+void WavFile::SetFormat(WavHeader * wavFormat)
+{
+	memcpy(&m_Format, wavFormat, sizeof(WavHeader));
 }
 
 char * LoadEntireFile(std::string fileName, size_t& fileSize)

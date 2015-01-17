@@ -63,9 +63,7 @@ bool AudioSource::isActive()
 
 bool AudioSource::Init(IXAudio2* XAudio2)
 {
-	WAVEFORMATEX * format = new WAVEFORMATEX();
-	memcpy(format, m_wavFile->GetFormat(), sizeof(WavHeader));
-	format->cbSize = 0; // Extra bits not in our header
+	WAVEFORMATEX * format = GetWavFormat();
 	if (!XAudio2CheckedCall(XAudio2->CreateSourceVoice(&m_Source, format, 0, 2.0f, &m_Callback)))
 	{
 		ConsolePrintf(TEXT("Failed to create XAudio2 source voice."));
@@ -76,6 +74,22 @@ bool AudioSource::Init(IXAudio2* XAudio2)
 
 	return true;
 }
+
+WAVEFORMATEX * AudioSource::GetWavFormat() {
+	WAVEFORMATEX * format = new WAVEFORMATEX();
+	memcpy(format, m_wavFile->GetFormat(), sizeof(WavHeader));
+	format->cbSize = 0; // Extra bits not in our header
+	return format;
+}
+
+void AudioSource::SetWavFormat(WavHeader * wavFormat)
+{
+	if (m_wavFile == nullptr) {
+		m_wavFile = new WavFile();
+	}
+	m_wavFile->SetFormat(wavFormat);
+}
+
 
 std::string AudioSource::GetName()
 {

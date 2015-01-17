@@ -22,12 +22,14 @@ public:
 	virtual Buffer* PeekBuffer(int i);
 	virtual void PutBuffer(Buffer* b);
 	void LoadWavFile(WavFile* wavFile);
+	WAVEFORMATEX * GetWavFormat();
 	virtual bool Init(IXAudio2* XAudio2);
 	std::string GetName();
 	bool Start();
 	bool Stop();
 	bool Cleanup();
 	size_t GetNumBuffers();
+	void SetWavFormat(WavHeader * wavFormat);
 };
 
 #endif // AudioSource_h__

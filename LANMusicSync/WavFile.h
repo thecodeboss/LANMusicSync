@@ -64,6 +64,7 @@ public:
 	size_t GetDataSize();
 	char * GetRawData();
 	WavHeader* GetFormat();
+	void SetFormat(WavHeader * wavFormat);
 };
 
 #endif // WavFile_h__
