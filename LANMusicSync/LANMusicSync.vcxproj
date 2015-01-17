@@ -76,7 +76,6 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="StreamingSource.cpp" />
     <ClCompile Include="WavFile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +85,6 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="StreamingSource.h" />
     <ClInclude Include="WavFile.h" />
     <ClInclude Include="XAudio2VoiceCallback.h" />
   </ItemGroup>

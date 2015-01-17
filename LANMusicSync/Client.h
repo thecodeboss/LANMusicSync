@@ -7,12 +7,15 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "AudioDevice.h"
 
 class Client
 {
+	AudioDevice* m_AudioDevice;
 	SOCKET m_ConnectSocket;
 public:
 	int Connect(char* server, char* port);
+	void setAudioDevice(AudioDevice* audioDevice);
 };
 
 #endif // Client_h__

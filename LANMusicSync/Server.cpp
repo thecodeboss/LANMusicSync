@@ -65,6 +65,9 @@ int Server::Start( char* port )
 		return 1;
 	}
 
+	// Start audio playback
+	m_AudioDevice->Play();
+
 	// Receive until the peer shuts down the connection
 	do {
 
@@ -95,5 +98,10 @@ int Server::Start( char* port )
 	} while (iResult > 0);
 
 	return 0;
+}
+
+void Server::setAudioDevice(AudioDevice* audioDevice)
+{
+	m_AudioDevice = audioDevice;
 }
 

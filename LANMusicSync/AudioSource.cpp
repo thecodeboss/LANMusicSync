@@ -1,23 +1,37 @@
 #include "AudioSource.h"
 #include "Debug.h"
 
-AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr) {}
+AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr)
+{
+	m_Mutex = CreateMutex(
+		NULL,              // default security attributes
+		FALSE,             // initially not owned
+		NULL);             // unnamed mutex
+}
+
 
 Buffer* AudioSource::GetBuffer()
 {
+	WaitForSingleObject(m_Mutex, INFINITE);
 	Buffer* b = m_AudioData.front();
 	m_AudioData.pop();
+	ReleaseMutex(m_Mutex);
 	return b;
 }
 
 Buffer* AudioSource::PeekBuffer()
 {
-	return m_AudioData.front();
+	WaitForSingleObject(m_Mutex, INFINITE);
+	Buffer* b = m_AudioData.front();
+	ReleaseMutex(m_Mutex);
+	return b;
 }
 
 void AudioSource::PutBuffer(Buffer* b)
 {
+	WaitForSingleObject(m_Mutex, INFINITE);
 	m_AudioData.push(b);
+	ReleaseMutex(m_Mutex);
 }
 
 void AudioSource::LoadWavFile(WavFile* wavFile)
@@ -83,11 +97,15 @@ bool AudioSource::Start()
 
 		if (!m_AudioData.size()) break;
 
+		WaitForSingleObject(m_Mutex, INFINITE);
+
 		// Pointer the XAudio buffer at our buffer array
 		XAUDIO2_BUFFER buf = { 0 };
 		buf.AudioBytes = BUFFER_SIZE;
 		buf.pAudioData = &m_AudioData.front()->front();
 		m_AudioData.pop();
+
+		ReleaseMutex(m_Mutex);
 
 		// Submit buffers
 		if (!XAudio2CheckedCall(m_Source->SubmitSourceBuffer(&buf)))

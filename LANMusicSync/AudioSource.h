@@ -6,6 +6,7 @@
 #include "XAudio2VoiceCallback.h"
 
 class AudioSource {
+	HANDLE m_Mutex;
 protected:
 	std::queue<Buffer*> m_AudioData;
 	bool m_bActive;

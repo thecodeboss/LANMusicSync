@@ -8,9 +8,6 @@
     <ClCompile Include="AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="StreamingSource.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Network</Filter>
     </ClCompile>
@@ -27,9 +24,6 @@
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioSource.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="StreamingSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">

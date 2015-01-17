@@ -110,3 +110,8 @@ int Client::Connect( char* server, char* port )
 
 	return 0;
 }
+
+void Client::setAudioDevice(AudioDevice* audioDevice)
+{
+	m_AudioDevice = audioDevice;
+}
