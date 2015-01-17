@@ -75,3 +75,8 @@ DWORD WINAPI AudioDevice::StreamThreadMain( AudioSource* source )
 
 	return 0;
 }
+
+AudioSource* AudioDevice::GetAudioSource()
+{
+	return m_AudioSource;
+}

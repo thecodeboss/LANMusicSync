@@ -1,7 +1,7 @@
 #ifndef Buffer_h__
 #define Buffer_h__
 
-#include <queue>
+#include <deque>
 #include <vector>
 #define BUFFER_SIZE 512
 #define MAX_BUFFER_COUNT 3

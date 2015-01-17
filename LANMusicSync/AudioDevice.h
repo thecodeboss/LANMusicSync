@@ -15,6 +15,7 @@ public:
 	bool Init();
 	bool Play();
 	void SetAudioSource(AudioSource* audioSource);
+	AudioSource* GetAudioSource();
 
 	DWORD WINAPI StreamThreadMain(AudioSource* source);
 };

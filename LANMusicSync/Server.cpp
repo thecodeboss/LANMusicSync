@@ -1,4 +1,7 @@
 #include "Server.h"
+#include "Buffer.h"
+#include <queue>
+#include <xutility>
 
 #define DEFAULT_BUFLEN 512
 
@@ -65,6 +68,14 @@ int Server::Start( char* port )
 		return 1;
 	}
 
+	// Create a copy of the first few buffers to send to the client
+	size_t numBuffers = m_AudioDevice->GetAudioSource()->GetNumBuffers();
+	std::queue<Buffer*> buffers;
+	for (int i = 0; i < min(MAX_BUFFER_COUNT, numBuffers); i++) {
+		buffers.push(m_AudioDevice->GetAudioSource()->PeekBuffer(i));
+	}
+	Sample_t* lastBufferSent = nullptr;
+
 	// Start audio playback
 	m_AudioDevice->Play();
 
@@ -77,7 +88,8 @@ int Server::Start( char* port )
 
 			// Echo the buffer back to the sender
 			while (1) {
-				int iSendResult = send(m_ClientSocket, recvbuf, iResult, 0);
+				lastBufferSent = buffers.front()->data();
+				int iSendResult = send(m_ClientSocket, (const char *)lastBufferSent, BUFFER_SIZE, 0);
 				if (iSendResult == SOCKET_ERROR) {
 					printf("send failed: %d\n", WSAGetLastError());
 					closesocket(m_ClientSocket);
@@ -85,6 +97,16 @@ int Server::Start( char* port )
 					return 1;
 				}
 				printf("Bytes sent: %d\n", iSendResult);
+
+				buffers.pop();
+				while (!buffers.size()) {
+					Buffer* frontBuffer = m_AudioDevice->GetAudioSource()->PeekBuffer();
+					if (lastBufferSent != frontBuffer->data()) {
+						buffers.push(frontBuffer);
+						break;
+					}
+					Sleep(1); // Sleep for 1 ms
+				}
 			}
 		} else if (iResult == 0)
 			printf("Connection closing...\n");

@@ -9,12 +9,20 @@ AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullp
 		NULL);             // unnamed mutex
 }
 
-
 Buffer* AudioSource::GetBuffer()
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
 	Buffer* b = m_AudioData.front();
-	m_AudioData.pop();
+	m_AudioData.pop_front();
+	ReleaseMutex(m_Mutex);
+	return b;
+}
+
+Buffer* AudioSource::PeekBuffer(int i)
+{
+	WaitForSingleObject(m_Mutex, INFINITE);
+	Buffer* b = m_AudioData.at(i);
+	m_AudioData.pop_front();
 	ReleaseMutex(m_Mutex);
 	return b;
 }
@@ -30,7 +38,7 @@ Buffer* AudioSource::PeekBuffer()
 void AudioSource::PutBuffer(Buffer* b)
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
-	m_AudioData.push(b);
+	m_AudioData.push_back(b);
 	ReleaseMutex(m_Mutex);
 }
 
@@ -41,7 +49,7 @@ void AudioSource::LoadWavFile(WavFile* wavFile)
 	char * filePtr = wavFile->GetRawData();
 	while (wavFile->GetDataSize() - bytesRead >= BUFFER_SIZE) {
 		Buffer* b = new Buffer(filePtr, filePtr + BUFFER_SIZE);
-		m_AudioData.push(b);
+		m_AudioData.push_back(b);
 		filePtr += BUFFER_SIZE;
 		bytesRead += BUFFER_SIZE;
 	}
@@ -103,7 +111,7 @@ bool AudioSource::Start()
 		XAUDIO2_BUFFER buf = { 0 };
 		buf.AudioBytes = BUFFER_SIZE;
 		buf.pAudioData = &m_AudioData.front()->front();
-		m_AudioData.pop();
+		m_AudioData.pop_front();
 
 		ReleaseMutex(m_Mutex);
 
@@ -137,4 +145,9 @@ bool AudioSource::Cleanup()
 {
 	// @TODO
 	return true;
+}
+
+size_t AudioSource::GetNumBuffers()
+{
+	return m_AudioData.size();
 }

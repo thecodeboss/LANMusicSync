@@ -8,7 +8,7 @@
 class AudioSource {
 	HANDLE m_Mutex;
 protected:
-	std::queue<Buffer*> m_AudioData;
+	std::deque<Buffer*> m_AudioData;
 	bool m_bActive;
 	IXAudio2SourceVoice* m_Source;
 	XAudio2VoiceCallback m_Callback;
@@ -19,6 +19,7 @@ public:
 	virtual bool isActive();
 	virtual Buffer* GetBuffer();
 	virtual Buffer* PeekBuffer();
+	virtual Buffer* PeekBuffer(int i);
 	virtual void PutBuffer(Buffer* b);
 	void LoadWavFile(WavFile* wavFile);
 	virtual bool Init(IXAudio2* XAudio2);
@@ -26,6 +27,7 @@ public:
 	bool Start();
 	bool Stop();
 	bool Cleanup();
+	size_t GetNumBuffers();
 };
 
 #endif // AudioSource_h__
