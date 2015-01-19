@@ -16,7 +16,7 @@ bool AudioDevice::Init()
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 	// Initialize the XAudio2 instance
-	if (XAudio2Create(&XAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK)
+	if (XAudio2Create(&XAudio2, XAUDIO2_DEBUG_ENGINE, XAUDIO2_DEFAULT_PROCESSOR) != S_OK)
 	{
 		ConsolePrintf(TEXT("Failed to initialize XAudio2."));
 		return false;

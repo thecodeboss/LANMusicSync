@@ -115,6 +115,7 @@ bool AudioSource::Start()
 		while (m_Source->GetState(&state), state.BuffersQueued >= MAX_BUFFER_COUNT - 1)
 		{
 			WaitForSingleObject(m_Callback.hBufferEndEvent, INFINITE);
+			ConsolePrintf("Buffer completed.");
 		}
 
 		if (!m_AudioData.size()) break;
@@ -135,6 +136,8 @@ bool AudioSource::Start()
 			ConsolePrintf(TEXT("XAudio2: Failed to submit source buffers."));
 			break;
 		}
+
+		ConsolePrintf(TEXT("Submitted a buffer."));
 	}
 
 	// Wait for everything to finish
@@ -144,7 +147,7 @@ bool AudioSource::Start()
 		WaitForSingleObjectEx(m_Callback.hBufferEndEvent, INFINITE, TRUE);
 	}
 
-	ConsolePrintf(TEXT("Finished playing procedural source voice (%s)"), GetName());
+	ConsolePrintf(TEXT("Finished playing source (%s)"), GetName());
 
 	return S_OK;
 }

@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 		}
 		else if (!strcmp("server", argv[1])) {
 			// Load an example wave file
-			WavFile * wavFile = new WavFile("Wav_Ex1.wav");
+			WavFile * wavFile = new WavFile("bach.wav");
 			audioSource->LoadWavFile(wavFile);
 
 			// Start a server
