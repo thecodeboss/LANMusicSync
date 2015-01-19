@@ -80,12 +80,13 @@ int Server::Start( char* port )
 
 	// Then put some buffers in the queue
 	for (unsigned i = 0; i < min(MAX_BUFFER_COUNT, numBuffers); i++) {
-		buffers.push(m_AudioDevice->GetAudioSource()->PeekBuffer(i));
+		buffers.push(m_AudioDevice->GetAudioSource()->GetBufferForSend());
 	}
 	Buffer* lastBufferSent = nullptr;
 
 	// Start audio playback
 	m_AudioDevice->Play();
+	bool bEnd = false;
 
 	// Receive until the peer shuts down the connection
 	do {
@@ -107,14 +108,16 @@ int Server::Start( char* port )
 				printf("Bytes sent: %d\n", iSendResult);
 
 				buffers.pop();
-				while (!buffers.size()) {
-					Buffer* frontBuffer = m_AudioDevice->GetAudioSource()->PeekBuffer();
-					if (lastBufferSent->data() != frontBuffer->data()) {
-						buffers.push(frontBuffer);
+				while (buffers.size() < MIN_BUFFER_COUNT) {
+					Buffer* lastBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
+					if (lastBuffer == nullptr) {
+						bEnd = true;
 						break;
 					}
-					Sleep(1); // Sleep for 1 ms
+					buffers.push(lastBuffer);
 				}
+
+				if (bEnd) break;
 			}
 		} else if (iResult == 0)
 			printf("Connection closing...\n");
@@ -125,7 +128,13 @@ int Server::Start( char* port )
 			return 1;
 		}
 
+		if (bEnd) break;
+
 	} while (iResult > 0);
+
+	while (1) {
+		Sleep(1);
+	}
 
 	return 0;
 }

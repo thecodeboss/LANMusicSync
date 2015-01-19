@@ -14,10 +14,12 @@ protected:
 	XAudio2VoiceCallback m_Callback;
 	WavFile* m_wavFile;
 	bool m_bPlaying;
+	size_t m_SendBufferCount;
 public:
 	AudioSource();
 	virtual bool isActive();
 	virtual Buffer* GetBuffer();
+	virtual Buffer* GetBufferForSend();
 	virtual Buffer* PeekBuffer();
 	virtual Buffer* PeekBuffer(int i);
 	virtual void PutBuffer(Buffer* b);

@@ -1,7 +1,7 @@
 #include "AudioSource.h"
 #include "Debug.h"
 
-AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr)
+AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr), m_SendBufferCount(0)
 {
 	m_Mutex = CreateMutex(
 		NULL,              // default security attributes
@@ -14,6 +14,17 @@ Buffer* AudioSource::GetBuffer()
 	WaitForSingleObject(m_Mutex, INFINITE);
 	Buffer* b = m_AudioData.front();
 	m_AudioData.pop_front();
+	m_SendBufferCount--;
+	ReleaseMutex(m_Mutex);
+	return b;
+}
+
+Buffer* AudioSource::GetBufferForSend()
+{
+	WaitForSingleObject(m_Mutex, INFINITE);
+	if (m_SendBufferCount >= m_AudioData.size()) return nullptr;
+	Buffer* b = m_AudioData.at(m_SendBufferCount);
+	m_SendBufferCount++;
 	ReleaseMutex(m_Mutex);
 	return b;
 }
@@ -118,7 +129,7 @@ bool AudioSource::Start()
 			ConsolePrintf("Buffer completed.");
 		}
 
-		if (!m_AudioData.size()) break;
+		if (!m_AudioData.size()) continue;
 
 		WaitForSingleObject(m_Mutex, INFINITE);
 
@@ -127,6 +138,7 @@ bool AudioSource::Start()
 		buf.AudioBytes = BUFFER_SIZE;
 		buf.pAudioData = &m_AudioData.front()->front();
 		m_AudioData.pop_front();
+		m_SendBufferCount--;
 
 		ReleaseMutex(m_Mutex);
 
