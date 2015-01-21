@@ -22,7 +22,10 @@ Buffer* AudioSource::PopFront()
 Buffer* AudioSource::GetBufferForSend()
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
-	if (m_SendBufferCount >= m_AudioData.size()) return nullptr;
+	if (m_SendBufferCount >= m_AudioData.size()) {
+		ReleaseMutex(m_Mutex);
+		return nullptr;
+	}
 	Buffer* b = m_AudioData.at(m_SendBufferCount);
 	m_SendBufferCount++;
 	ReleaseMutex(m_Mutex);
@@ -112,7 +115,7 @@ bool AudioSource::Start()
 			ConsolePrintf("Buffer completed.");
 		}
 
-		if (!m_AudioData.size()) continue;
+		if (!GetNumBuffers()) continue;
 
 		WaitForSingleObject(m_Mutex, INFINITE);
 
@@ -161,5 +164,9 @@ bool AudioSource::Cleanup()
 
 size_t AudioSource::GetNumBuffers()
 {
-	return m_AudioData.size();
+	size_t result = 0;
+	WaitForSingleObject(m_Mutex, INFINITE);
+	result = m_AudioData.size();
+	ReleaseMutex(m_Mutex);
+	return result;
 }

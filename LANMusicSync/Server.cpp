@@ -108,7 +108,7 @@ int Server::Start( char* port )
 				printf("Bytes sent: %d\n", iSendResult);
 
 				sendQueue.pop();
-				while (sendQueue.size() < MIN_BUFFER_COUNT) {
+				while (sendQueue.size() < MIN_BUFFER_COUNT && !bEnd) {
 					Buffer* nextBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
 					if (nextBuffer == nullptr) {
 						bEnd = true;
@@ -117,7 +117,7 @@ int Server::Start( char* port )
 					sendQueue.push(nextBuffer);
 				}
 
-				if (bEnd) break;
+				if (bEnd && !sendQueue.size()) break;
 			}
 		} else if (iResult == 0)
 			printf("Connection closing...\n");
@@ -133,7 +133,7 @@ int Server::Start( char* port )
 	} while (iResult > 0);
 
 	while (1) {
-		Sleep(1);
+		Sleep(10);
 	}
 
 	return 0;

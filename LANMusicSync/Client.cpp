@@ -86,9 +86,9 @@ int Client::Connect( char* server, char* port )
 
 	// Receive data until the server closes the connection
 	int recvbuflen = BUFFER_SIZE;
-	Buffer* recvbuf = new Buffer(recvbuflen, 0);
 	do {
-		iResult = recv(m_ConnectSocket, (char*)recvbuf->data(), recvbuflen, 0);
+		Buffer* recvbuf = new Buffer(BUFFER_SIZE);
+		iResult = recv(m_ConnectSocket, (char*)&recvbuf->front(), recvbuflen, MSG_WAITALL);
 		if (iResult > 0)
 			printf("Bytes received: %d\n", iResult);
 		else if (iResult == 0)
@@ -98,7 +98,7 @@ int Client::Connect( char* server, char* port )
 
 		if (!bWavFormatReceived) {
 			// Then the first buffer is the wave format
-			WavHeader test = *(WavHeader *)recvbuf->data();
+			WavHeader test = *(WavHeader *)&recvbuf->front();
 			m_AudioDevice->GetAudioSource()->SetWavFormat(&test);
 			bWavFormatReceived = true;
 			continue;
