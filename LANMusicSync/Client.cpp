@@ -104,8 +104,11 @@ int Client::Connect( char* server, char* port )
 			continue;
 		}
 
-		m_AudioDevice->GetAudioSource()->PutBuffer(recvbuf);
-		if (!bPlaying) {
+		m_AudioDevice->GetAudioSource()->AppendBuffer(recvbuf);
+		ConsolePrintf(TEXT("Received a buffer."));
+		// If we aren't playing and we now have enough buffers to being, start playing.
+		// Otherwise, keep receiving more buffers.
+		if (!bPlaying && m_AudioDevice->GetAudioSource()->GetNumBuffers() >= MIN_BUFFER_COUNT) {
 			// Start audio playback
 			m_AudioDevice->Play();
 			bPlaying = true;

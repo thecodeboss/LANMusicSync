@@ -9,7 +9,7 @@ AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullp
 		NULL);             // unnamed mutex
 }
 
-Buffer* AudioSource::GetBuffer()
+Buffer* AudioSource::PopFront()
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
 	Buffer* b = m_AudioData.front();
@@ -29,24 +29,7 @@ Buffer* AudioSource::GetBufferForSend()
 	return b;
 }
 
-Buffer* AudioSource::PeekBuffer(int i)
-{
-	WaitForSingleObject(m_Mutex, INFINITE);
-	Buffer* b = m_AudioData.at(i);
-	m_AudioData.pop_front();
-	ReleaseMutex(m_Mutex);
-	return b;
-}
-
-Buffer* AudioSource::PeekBuffer()
-{
-	WaitForSingleObject(m_Mutex, INFINITE);
-	Buffer* b = m_AudioData.front();
-	ReleaseMutex(m_Mutex);
-	return b;
-}
-
-void AudioSource::PutBuffer(Buffer* b)
+void AudioSource::AppendBuffer(Buffer* b)
 {
 	WaitForSingleObject(m_Mutex, INFINITE);
 	m_AudioData.push_back(b);
@@ -149,7 +132,7 @@ bool AudioSource::Start()
 			break;
 		}
 
-		ConsolePrintf(TEXT("Submitted a buffer."));
+		ConsolePrintf(TEXT("Submitted a buffer for playback."));
 	}
 
 	// Wait for everything to finish

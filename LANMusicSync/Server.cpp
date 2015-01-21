@@ -71,16 +71,16 @@ int Server::Start( char* port )
 	// Create a copy of the first few buffers to send to the client, putting the wave
 	// format information in the very first buffer
 	size_t numBuffers = m_AudioDevice->GetAudioSource()->GetNumBuffers();
-	std::queue<Buffer*> buffers;
+	std::queue<Buffer*> sendQueue;
 
 	// Copy the wave format
 	Buffer* format = new Buffer(sizeof(WAVEFORMATEX));
 	memcpy(format->data(), m_AudioDevice->GetAudioSource()->GetWavFormat(), sizeof(WAVEFORMATEX));
-	buffers.push(format);
+	sendQueue.push(format);
 
-	// Then put some buffers in the queue
+	// Then put some buffers in the send queue
 	for (unsigned i = 0; i < min(MAX_BUFFER_COUNT, numBuffers); i++) {
-		buffers.push(m_AudioDevice->GetAudioSource()->GetBufferForSend());
+		sendQueue.push(m_AudioDevice->GetAudioSource()->GetBufferForSend());
 	}
 	Buffer* lastBufferSent = nullptr;
 
@@ -97,8 +97,8 @@ int Server::Start( char* port )
 
 			// Echo the buffer back to the sender
 			while (1) {
-				lastBufferSent = buffers.front();
-				int iSendResult = send(m_ClientSocket, (const char *)lastBufferSent->data(), lastBufferSent->size(), 0);
+				lastBufferSent = sendQueue.front();
+				int iSendResult = send(m_ClientSocket, (const char *)&lastBufferSent->front(), lastBufferSent->size(), 0);
 				if (iSendResult == SOCKET_ERROR) {
 					printf("send failed: %d\n", WSAGetLastError());
 					closesocket(m_ClientSocket);
@@ -107,14 +107,14 @@ int Server::Start( char* port )
 				}
 				printf("Bytes sent: %d\n", iSendResult);
 
-				buffers.pop();
-				while (buffers.size() < MIN_BUFFER_COUNT) {
-					Buffer* lastBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
-					if (lastBuffer == nullptr) {
+				sendQueue.pop();
+				while (sendQueue.size() < MIN_BUFFER_COUNT) {
+					Buffer* nextBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
+					if (nextBuffer == nullptr) {
 						bEnd = true;
 						break;
 					}
-					buffers.push(lastBuffer);
+					sendQueue.push(nextBuffer);
 				}
 
 				if (bEnd) break;

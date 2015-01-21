@@ -18,11 +18,9 @@ protected:
 public:
 	AudioSource();
 	virtual bool isActive();
-	virtual Buffer* GetBuffer();
+	virtual Buffer* PopFront();
 	virtual Buffer* GetBufferForSend();
-	virtual Buffer* PeekBuffer();
-	virtual Buffer* PeekBuffer(int i);
-	virtual void PutBuffer(Buffer* b);
+	virtual void AppendBuffer(Buffer* b);
 	void LoadWavFile(WavFile* wavFile);
 	WAVEFORMATEX * GetWavFormat();
 	virtual bool Init(IXAudio2* XAudio2);
