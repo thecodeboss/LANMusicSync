@@ -32,6 +32,8 @@ public:
 	bool Cleanup();
 	size_t GetNumBuffers();
 	void SetWavFormat(WavHeader * wavFormat);
+	// @TODO: Need to straighten out with 'GetBufferForSend' and 'SentBuffer(i)'
+	// or something similar.
 };
 
 #endif // AudioSource_h__
