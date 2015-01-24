@@ -4,9 +4,9 @@
 AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr), m_SendBufferCount(0)
 {
 	m_Mutex = CreateMutex(
-		NULL,              // default security attributes
+		nullptr,              // default security attributes
 		FALSE,             // initially not owned
-		NULL);             // unnamed mutex
+		nullptr);             // unnamed mutex
 }
 
 Buffer* AudioSource::PopFront()
@@ -169,4 +169,36 @@ size_t AudioSource::GetNumBuffers()
 	result = m_AudioData.size();
 	ReleaseMutex(m_Mutex);
 	return result;
+}
+
+DWORD WINAPI FileStreamProc(LPVOID pContext)
+{
+	if (!pContext) return -1;
+	return ((FileStreamContext*)pContext)->Source->FileStreamThreadMain(((FileStreamContext*)pContext)->FileName);
+}
+
+bool AudioSource::StreamFromFile(std::string fileName)
+{
+	FileStreamContext* FileContext = new FileStreamContext(this, fileName);
+
+	DWORD dwThreadId = 0;
+	HANDLE StreamingVoiceThread = CreateThread(nullptr, 0, FileStreamProc, FileContext, 0, &dwThreadId);
+	if(StreamingVoiceThread == nullptr)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+DWORD WINAPI AudioSource::FileStreamThreadMain(std::string fileName)
+{
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+	// Do stuff
+	ConsolePrintf("Found our way inside the file streaming thread!");
+
+	CoUninitialize();
+
+	return 0;
 }

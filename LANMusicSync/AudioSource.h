@@ -30,8 +30,16 @@ public:
 	bool Cleanup();
 	size_t GetNumBuffers();
 	void SetWavFormat(WavHeader * wavFormat);
-	// @TODO: Need to straighten out with 'GetBufferForSend' and 'SentBuffer(i)'
-	// or something similar.
+
+	bool StreamFromFile(std::string fileName);
+	DWORD WINAPI FileStreamThreadMain(std::string fileName);
+};
+
+struct FileStreamContext
+{
+	AudioSource* Source;
+	std::string FileName;
+	FileStreamContext(AudioSource* s, std::string fileName) : Source(s), FileName(fileName) {}
 };
 
 #endif // AudioSource_h__
