@@ -17,6 +17,7 @@
     <ClCompile Include="WavFile.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="FFMpeg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="XAudio2VoiceCallback.h">
       <Filter>Audio</Filter>
     </ClInclude>
+    <ClInclude Include="FFMpeg.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Audio">
