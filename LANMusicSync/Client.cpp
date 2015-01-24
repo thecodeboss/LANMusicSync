@@ -85,10 +85,12 @@ int Client::Connect( char* server, char* port )
 	bool bPlaying = false;
 
 	// Receive data until the server closes the connection
-	int recvbuflen = BUFFER_SIZE;
+	int recvbuflen = BUFFER_SIZE * 16;
+	unsigned char tempBuffer[BUFFER_SIZE * 16];
 	do {
-		Buffer* recvbuf = new Buffer(BUFFER_SIZE);
-		iResult = recv(m_ConnectSocket, (char*)&recvbuf->front(), recvbuflen, MSG_WAITALL);
+		
+		iResult = recv(m_ConnectSocket, (char*)&tempBuffer[0], recvbuflen, MSG_WAITALL);
+		Buffer* recvbuf = new Buffer(tempBuffer, tempBuffer + iResult);
 		if (iResult > 0)
 			printf("Bytes received: %d\n", iResult);
 		else if (iResult == 0)

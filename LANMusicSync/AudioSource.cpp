@@ -1,5 +1,6 @@
 #include "AudioSource.h"
 #include "Debug.h"
+#include "FFMpeg.h"
 
 AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr), m_SendBufferCount(0)
 {
@@ -105,6 +106,8 @@ bool AudioSource::Start()
 		return false;
 	}
 
+	std::deque<Buffer*> buffersForDelete;
+
 	while (m_bPlaying)
 	{
 		// Check with XAudio to see if there are any buffers available, and wait if needed
@@ -112,17 +115,22 @@ bool AudioSource::Start()
 		while (m_Source->GetState(&state), state.BuffersQueued >= MAX_BUFFER_COUNT - 1)
 		{
 			WaitForSingleObject(m_Callback.hBufferEndEvent, INFINITE);
-			ConsolePrintf("Buffer completed.");
 		}
 
 		if (!GetNumBuffers()) continue;
+
+		if (buffersForDelete.size() > MAX_BUFFER_COUNT + 1) {
+			delete buffersForDelete.front();
+			buffersForDelete.pop_front();
+		}
 
 		WaitForSingleObject(m_Mutex, INFINITE);
 
 		// Pointer the XAudio buffer at our buffer array
 		XAUDIO2_BUFFER buf = { 0 };
-		buf.AudioBytes = BUFFER_SIZE;
+		buf.AudioBytes = m_AudioData.front()->size();
 		buf.pAudioData = &m_AudioData.front()->front();
+		buffersForDelete.push_back(m_AudioData.front());
 		m_AudioData.pop_front();
 		m_SendBufferCount--;
 
@@ -134,8 +142,6 @@ bool AudioSource::Start()
 			ConsolePrintf(TEXT("XAudio2: Failed to submit source buffers."));
 			break;
 		}
-
-		ConsolePrintf(TEXT("Submitted a buffer for playback."));
 	}
 
 	// Wait for everything to finish
@@ -197,6 +203,27 @@ DWORD WINAPI AudioSource::FileStreamThreadMain(std::string fileName)
 
 	// Do stuff
 	ConsolePrintf("Found our way inside the file streaming thread!");
+
+	FFMpeg* ffmpeg = new FFMpeg();
+	ffmpeg->LoadFile(fileName);
+
+	Buffer *b = nullptr;
+	bool bGotWavFormat = false;
+	while (b = ffmpeg->GetFrame()) {
+		if (b->size() % 4 != 0) continue;
+		AppendBuffer(b);
+		if (!bGotWavFormat) {
+			SetWavFormat((WavHeader*)ffmpeg->GetWavFormat());
+			bGotWavFormat = true;
+		}
+
+		// Don't read the whole file. Wait for data to be played first.
+		while (GetNumBuffers() > 100) {
+			Sleep(10);
+		}
+	}
+
+	//delete ffmpeg;
 
 	CoUninitialize();
 

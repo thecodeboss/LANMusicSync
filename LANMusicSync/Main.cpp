@@ -8,7 +8,6 @@
 #include "Client.h"
 #include "Server.h"
 #include "AudioDevice.h"
-#include "FFMpeg.h"
 
 // Format:
 // ./LANMusicSync client 192.168.0.100 1234
@@ -22,8 +21,6 @@ int main(int argc, char** argv) {
 		printf("WSAStartup failed with error: %d\n", iResult);
 		return 1;
 	}
-
-	FFMpeg* ffmpeg = new FFMpeg();
 
 	// Initialize audio
 	AudioDevice* audioDevice = new AudioDevice();

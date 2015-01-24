@@ -68,6 +68,11 @@ int Server::Start( char* port )
 		return 1;
 	}
 
+	while (m_AudioDevice->GetAudioSource()->GetNumBuffers() < 10) {
+		// Wait for the file to be loaded
+		Sleep(1);
+	}
+
 	// Create a copy of the first few buffers to send to the client, putting the wave
 	// format information in the very first buffer
 	size_t numBuffers = m_AudioDevice->GetAudioSource()->GetNumBuffers();
@@ -111,8 +116,14 @@ int Server::Start( char* port )
 				while (sendQueue.size() < MIN_BUFFER_COUNT && !bEnd) {
 					Buffer* nextBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
 					if (nextBuffer == nullptr) {
-						bEnd = true;
-						break;
+						// No buffers are ready, let's try waiting a bit for some.
+						Sleep(200);
+						nextBuffer = m_AudioDevice->GetAudioSource()->GetBufferForSend();
+						if (nextBuffer == nullptr) {
+							// Okay there probably aren't any more buffers to send, let's break.
+							bEnd = true;
+							break;
+						}
 					}
 					sendQueue.push(nextBuffer);
 				}
