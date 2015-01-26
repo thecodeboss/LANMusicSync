@@ -150,15 +150,10 @@ Buffer* FFMpeg::GetFrame()
 
 		int sizediff = frame->nb_samples * (WavFormat.BitsPerSample / 8) * WavFormat.NumChannels;
 		Buffer* buffer = nullptr;
-		//Buffer* buffer = new Buffer(frame->data[0], frame->data[0] + sizediff);
 		if (av_sample_fmt_is_planar(codecContext->sample_fmt)) {
 			buffer = new Buffer(sizediff);
-// 			for (int i = 0; i < frame->nb_samples; i++) {
-// 				for (unsigned j = 0; j < WavFormat.NumChannels; j++) {
-// 					(*buffer)[WavFormat.NumChannels * i + j] = frame->extended_data[j][i];
-// 				}
-// 			}
 
+			// Convert from planar to non-planar
 			int16_t *dst = (int16_t *)&buffer->front();
 			int16_t **src = (int16_t **)frame->extended_data;
 			for (int i = 0; i < frame->nb_samples; i++) {

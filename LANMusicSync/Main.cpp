@@ -39,10 +39,7 @@ int main(int argc, char** argv) {
 			c.Connect(argv[2], argv[3]);
 		}
 		else if (!strcmp("server", argv[1])) {
-			// Load an example wave file
-			//WavFile * wavFile = new WavFile("bach.wav");
-			//audioSource->LoadWavFile(wavFile);
-
+			// Load the audio file
 			audioSource->StreamFromFile(argv[3]);
 
 			// Start a server

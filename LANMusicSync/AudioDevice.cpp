@@ -60,16 +60,16 @@ DWORD WINAPI AudioDevice::StreamThreadMain( AudioSource* source )
 		source->Init(XAudio2);
 	}
 
-	ConsolePrintf("Starting XAudio2 source (%s)", source->GetName());
+	ConsolePrintf("Starting XAudio2 source (%s)", source->GetName().c_str());
 	source->Start();
 
-	ConsolePrintf("Stopping XAudio2 source (%s)", source->GetName());
+	ConsolePrintf("Stopping XAudio2 source (%s)", source->GetName().c_str());
 	source->Stop();
 
-	ConsolePrintf("Cleaning up XAudio2 source (%s)", source->GetName());
+	ConsolePrintf("Cleaning up XAudio2 source (%s)", source->GetName().c_str());
 	source->Cleanup();
 
-	ConsolePrintf("XAudio2 source cleaned up (%s)", source->GetName());
+	ConsolePrintf("XAudio2 source cleaned up (%s)", source->GetName().c_str());
 
 	CoUninitialize();
 

@@ -2,7 +2,7 @@
 #include "Debug.h"
 #include "FFMpeg.h"
 
-AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_wavFile(nullptr), m_SendBufferCount(0)
+AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_SendBufferCount(0)
 {
 	m_Mutex = CreateMutex(
 		nullptr,              // default security attributes
@@ -40,20 +40,6 @@ void AudioSource::AppendBuffer(Buffer* b)
 	ReleaseMutex(m_Mutex);
 }
 
-void AudioSource::LoadWavFile(WavFile* wavFile)
-{
-	// @TODO: The last buffer in the file may get cut off due to the logic used here
-	size_t bytesRead = 0;
-	char * filePtr = wavFile->GetRawData();
-	while (wavFile->GetDataSize() - bytesRead >= BUFFER_SIZE) {
-		Buffer* b = new Buffer(filePtr, filePtr + BUFFER_SIZE);
-		m_AudioData.push_back(b);
-		filePtr += BUFFER_SIZE;
-		bytesRead += BUFFER_SIZE;
-	}
-	m_wavFile = wavFile;
-}
-
 bool AudioSource::isActive()
 {
 	return m_bActive;
@@ -75,17 +61,14 @@ bool AudioSource::Init(IXAudio2* XAudio2)
 
 WAVEFORMATEX * AudioSource::GetWavFormat() {
 	WAVEFORMATEX * format = new WAVEFORMATEX();
-	memcpy(format, m_wavFile->GetFormat(), sizeof(WavHeader));
+	memcpy(format, &m_Format, sizeof(WavHeader));
 	format->cbSize = 0; // Extra bits not in our header
 	return format;
 }
 
 void AudioSource::SetWavFormat(WavHeader * wavFormat)
 {
-	if (m_wavFile == nullptr) {
-		m_wavFile = new WavFile();
-	}
-	m_wavFile->SetFormat(wavFormat);
+	memcpy(&m_Format, wavFormat, sizeof(WavHeader));
 }
 
 

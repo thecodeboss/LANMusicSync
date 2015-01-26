@@ -2,8 +2,8 @@
 #define AudioSource_h__
 
 #include "Buffer.h"
-#include "WavFile.h"
 #include "XAudio2VoiceCallback.h"
+#include "WavFormat.h"
 
 class AudioSource {
 	HANDLE m_Mutex;
@@ -12,7 +12,7 @@ protected:
 	bool m_bActive;
 	IXAudio2SourceVoice* m_Source;
 	XAudio2VoiceCallback m_Callback;
-	WavFile* m_wavFile;
+	WavHeader m_Format;
 	bool m_bPlaying;
 	size_t m_SendBufferCount;
 public:
@@ -21,7 +21,6 @@ public:
 	virtual Buffer* PopFront();
 	virtual Buffer* GetBufferForSend();
 	virtual void AppendBuffer(Buffer* b);
-	void LoadWavFile(WavFile* wavFile);
 	WAVEFORMATEX * GetWavFormat();
 	virtual bool Init(IXAudio2* XAudio2);
 	std::string GetName();

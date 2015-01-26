@@ -3,7 +3,7 @@
 #include <string>
 #include <windows.h>
 #include "Buffer.h"
-#include "WavFile.h"
+#include "WavFormat.h"
 
 extern "C" 
 {

@@ -14,9 +14,6 @@
     <ClCompile Include="Server.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="WavFile.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
     <ClCompile Include="FFMpeg.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -36,13 +33,13 @@
     <ClInclude Include="Buffer.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="WavFile.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="XAudio2VoiceCallback.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="FFMpeg.h" />
+    <ClInclude Include="WavFormat.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Audio">
