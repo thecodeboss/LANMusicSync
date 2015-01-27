@@ -42,11 +42,15 @@
     <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)ffmpeg\include;$(IncludePath)</IncludePath>
     <ReferencePath>$(SolutionDir)ffmpeg\lib;$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
     <LibraryPath>$(SolutionDir)ffmpeg\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(DXSDK_DIR)Include;$(SolutionDir)ffmpeg\include;$(IncludePath)</IncludePath>
     <ReferencePath>$(SolutionDir)ffmpeg\lib;$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
     <LibraryPath>$(SolutionDir)ffmpeg\lib;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -77,23 +81,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AudioDevice.cpp" />
-    <ClCompile Include="AudioSource.cpp" />
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="FFMpeg.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="..\src\AudioDevice.cpp" />
+    <ClCompile Include="..\src\AudioSource.cpp" />
+    <ClCompile Include="..\src\Client.cpp" />
+    <ClCompile Include="..\src\FFMpeg.cpp" />
+    <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioDevice.h" />
-    <ClInclude Include="AudioSource.h" />
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="FFMpeg.h" />
-    <ClInclude Include="Server.h" />
-    <ClInclude Include="WavFormat.h" />
-    <ClInclude Include="XAudio2VoiceCallback.h" />
+    <ClInclude Include="..\src\AudioDevice.h" />
+    <ClInclude Include="..\src\AudioSource.h" />
+    <ClInclude Include="..\src\Buffer.h" />
+    <ClInclude Include="..\src\Client.h" />
+    <ClInclude Include="..\src\Debug.h" />
+    <ClInclude Include="..\src\FFMpeg.h" />
+    <ClInclude Include="..\src\Server.h" />
+    <ClInclude Include="..\src\WavFormat.h" />
+    <ClInclude Include="..\src\XAudio2VoiceCallback.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

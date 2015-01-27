@@ -1,43 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="AudioDevice.cpp">
+    <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\AudioDevice.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AudioSource.cpp">
+    <ClCompile Include="..\src\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
+    <ClCompile Include="..\src\Client.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="..\src\Server.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="FFMpeg.cpp" />
+    <ClCompile Include="..\src\FFMpeg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="AudioDevice.h">
+    <ClInclude Include="..\src\Debug.h" />
+    <ClInclude Include="..\src\AudioDevice.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioSource.h">
+    <ClInclude Include="..\src\AudioSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
+    <ClInclude Include="..\src\Client.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
+    <ClInclude Include="..\src\Server.h">
       <Filter>Network</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer.h">
+    <ClInclude Include="..\src\Buffer.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="XAudio2VoiceCallback.h">
+    <ClInclude Include="..\src\XAudio2VoiceCallback.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="FFMpeg.h" />
-    <ClInclude Include="WavFormat.h">
+    <ClInclude Include="..\src\FFMpeg.h" />
+    <ClInclude Include="..\src\WavFormat.h">
       <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
