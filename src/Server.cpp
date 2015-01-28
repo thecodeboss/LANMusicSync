@@ -3,7 +3,7 @@
 #include <queue>
 #include <xutility>
 
-#define DEFAULT_BUFLEN 512
+// @TODO: Ifdef windows
 
 int Server::Start( char* port )
 {
@@ -54,8 +54,8 @@ int Server::Start( char* port )
 		return 1;
 	}
 
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
+	char recvbuf[BUFFER_SIZE];
+	int recvbuflen = BUFFER_SIZE;
 
 	m_ClientSocket = INVALID_SOCKET;
 

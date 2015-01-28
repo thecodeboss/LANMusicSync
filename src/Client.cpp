@@ -2,6 +2,8 @@
 #include "Debug.h"
 #include "Buffer.h"
 
+// @TODO: Ifdef windows
+
 int Client::Connect( char* server, char* port )
 {
 	struct addrinfo *result = NULL,

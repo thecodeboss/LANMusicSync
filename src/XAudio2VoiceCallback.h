@@ -1,6 +1,7 @@
 #ifndef XAudio2VoiceCallback_h__
 #define XAudio2VoiceCallback_h__
 
+#ifdef WINDOWS
 #include <xaudio2.h>
 
 class XAudio2VoiceCallback : public IXAudio2VoiceCallback
@@ -35,5 +36,6 @@ public:
 	{
 	}
 };
+#endif
 
 #endif // XAudio2VoiceCallback_h__
