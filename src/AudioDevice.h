@@ -5,11 +5,15 @@
 #include <xaudio2.h>
 #include "AudioSource.h"
 
-DWORD WINAPI StreamProc(LPVOID pContext);
+#ifdef WINDOWS
+	DWORD WINAPI StreamProc(LPVOID pContext);
+#endif
 
 class AudioDevice {
+#ifdef WINDOWS
 	static IXAudio2* XAudio2;
 	static IXAudio2MasteringVoice* XAudio2MasteringVoice;
+#endif
 	AudioSource* m_AudioSource;
 public:
 	bool Init();
@@ -17,7 +21,9 @@ public:
 	void SetAudioSource(AudioSource* audioSource);
 	AudioSource* GetAudioSource();
 
+#ifdef WINDOWS
 	DWORD WINAPI StreamThreadMain(AudioSource* source);
+#endif
 };
 
 struct AudioStreamContext

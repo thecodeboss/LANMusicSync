@@ -2,6 +2,7 @@
 #include "Debug.h"
 #include "FFMpeg.h"
 
+#ifdef WINDOWS
 AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullptr), m_SendBufferCount(0)
 {
 	m_Mutex = CreateMutex(
@@ -9,6 +10,12 @@ AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_Source(nullp
 		FALSE,             // initially not owned
 		nullptr);             // unnamed mutex
 }
+#else
+AudioSource::AudioSource() : m_bActive(false), m_bPlaying(false), m_SendBufferCount(0)
+{
+	// @TODO
+}
+#endif
 
 Buffer* AudioSource::PopFront()
 {

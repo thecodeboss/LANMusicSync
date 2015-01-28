@@ -4,14 +4,17 @@
 IXAudio2* AudioDevice::XAudio2;
 IXAudio2MasteringVoice* AudioDevice::XAudio2MasteringVoice;
 
+#ifdef WINDOWS
 DWORD WINAPI StreamProc( LPVOID pContext )
 {
 	if (!pContext) return -1;
 	return ((AudioStreamContext*)pContext)->audioDevice->StreamThreadMain(((AudioStreamContext*)pContext)->Source);
 }
+#endif
 
 bool AudioDevice::Init()
 {
+#ifdef WINDOWS
 	// Set thread concurrency model
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
@@ -28,6 +31,7 @@ bool AudioDevice::Init()
 		ConsolePrintf(TEXT("Failed to create XAudio2 mastering voice."));
 		return false;
 	}
+#endif
 
 	return true;
 }
@@ -41,16 +45,21 @@ bool AudioDevice::Play()
 {
 	AudioStreamContext* StreamContext = new AudioStreamContext(this, m_AudioSource);
 
+#ifdef WINDOWS
 	DWORD dwThreadId = 0;
 	HANDLE StreamingVoiceThread = CreateThread( NULL, 0, StreamProc, StreamContext, 0, &dwThreadId );
 	if( StreamingVoiceThread == NULL )
 	{
 		return false;
 	}
+#else
+	return false;
+#endif
 
 	return true;
 }
 
+#ifdef WINDOWS
 DWORD WINAPI AudioDevice::StreamThreadMain( AudioSource* source )
 {
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -60,21 +69,22 @@ DWORD WINAPI AudioDevice::StreamThreadMain( AudioSource* source )
 		source->Init(XAudio2);
 	}
 
-	ConsolePrintf("Starting XAudio2 source (%s)", source->GetName().c_str());
+	ConsolePrintf("Starting audio source (%s)", source->GetName().c_str());
 	source->Start();
 
-	ConsolePrintf("Stopping XAudio2 source (%s)", source->GetName().c_str());
+	ConsolePrintf("Stopping audio source (%s)", source->GetName().c_str());
 	source->Stop();
 
-	ConsolePrintf("Cleaning up XAudio2 source (%s)", source->GetName().c_str());
+	ConsolePrintf("Cleaning up audio source (%s)", source->GetName().c_str());
 	source->Cleanup();
 
-	ConsolePrintf("XAudio2 source cleaned up (%s)", source->GetName().c_str());
+	ConsolePrintf("Audio source cleaned up (%s)", source->GetName().c_str());
 
 	CoUninitialize();
 
 	return 0;
 }
+#endif
 
 AudioSource* AudioDevice::GetAudioSource()
 {

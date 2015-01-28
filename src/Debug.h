@@ -1,8 +1,14 @@
 #ifndef Debug_h__
 #define Debug_h__
 
+#ifdef _WINDOWS_
 #include <windows.h>
 #include <xaudio2.h>
+#else
+#include <cstdarg>
+typedef const char * LPTSTR;
+#endif
+
 #include <string>
 
 // Outputs to the Visual Studio console
@@ -21,6 +27,7 @@ static void ConsolePrintf(LPTSTR fmt, ...)
 #endif
 }
 
+#ifdef _WINDOWS_
 static bool XAudio2CheckedCall(HRESULT ErrorCode)
 {
 	if (ErrorCode != S_OK)
@@ -47,5 +54,6 @@ static bool XAudio2CheckedCall(HRESULT ErrorCode)
 	}
 	return true;
 }
+#endif
 
 #endif // Debug_h__
