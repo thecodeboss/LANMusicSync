@@ -11,7 +11,7 @@
 
 // Format:
 // ./LANMusicSync client 192.168.0.100 1234
-// ./LANMusicSync server 1234
+// ./LANMusicSync server 1234 "filename"
 
 int main(int argc, char** argv) {
 	// Initialize Winsock

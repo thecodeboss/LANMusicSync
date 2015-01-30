@@ -49,4 +49,7 @@
       <UniqueIdentifier>{a218f9f9-5642-48c7-8d2a-c8deb875656f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>
